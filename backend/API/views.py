@@ -5,7 +5,7 @@ from rest_framework import permissions
 from . permissions import  IsStaffEditorPermission, IsOwnerOrReadOnly
 
 from .models import Category, Product
-from . serializers import CategorySerializer, ProductSerializer
+from . serializers import CategorySerializer, ProductSerializer, ProductDetailSerializer
 
 
 class CategoryListCreateAPIView(generics.ListCreateAPIView):
@@ -21,7 +21,7 @@ class ProductListCreateAPIView(
 
 class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    serializer_class = ProductDetailSerializer
     lookup_field = 'pk'
     permission_classes = [
                           IsStaffEditorPermission |

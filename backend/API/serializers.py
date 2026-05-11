@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from rest_framework.reverse import reverse
 
 
 from .models import Category, Product
@@ -18,6 +18,10 @@ from .models import Category, Product
 
 class ProductSerializer(serializers.ModelSerializer):
 
+    product_link = serializers.HyperlinkedIdentityField(
+        view_name='product-detail',
+        lookup_field='pk'
+    )
     owner_username = serializers.SerializerMethodField(read_only=True)
     sale_price = serializers.SerializerMethodField(read_only=True)
 
@@ -26,6 +30,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
+            'product_link',
             'price',
             'sale_price',
             'category',
@@ -34,6 +39,38 @@ class ProductSerializer(serializers.ModelSerializer):
         ]
 
 
+    def get_product_link(self, obj):
+        request = self.context.get('request')
+        if request is None:
+            return None
+        return reverse('product-detail', kwargs={'pk': obj.pk}, request=request)
+
+    def get_owner_username(self, obj):
+
+        if obj.owner:
+            return obj.owner.username
+        return None
+
+    def get_sale_price(self, obj):
+        print(obj.price)
+        return "%.2f" % (float(obj.price) * 1.09)
+
+
+class ProductDetailSerializer(serializers.ModelSerializer):
+    owner_username = serializers.SerializerMethodField(read_only=True)
+    sale_price = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Product
+        fields = [
+                 'id',
+                'name',
+                'price',
+                'sale_price',
+                'category',
+                'owner',
+                'owner_username',
+            ]
 
     def get_owner_username(self, obj):
 
