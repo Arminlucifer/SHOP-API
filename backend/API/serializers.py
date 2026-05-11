@@ -22,8 +22,10 @@ class ProductSerializer(serializers.ModelSerializer):
         view_name='product-detail',
         lookup_field='pk'
     )
-    owner_username = serializers.SerializerMethodField(read_only=True)
+
     sale_price = serializers.SerializerMethodField(read_only=True)
+    category = serializers.StringRelatedField(read_only=True)
+    owner = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Product
@@ -35,7 +37,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'sale_price',
             'category',
             'owner',
-            'owner_username',
+
         ]
 
 
@@ -45,11 +47,6 @@ class ProductSerializer(serializers.ModelSerializer):
             return None
         return reverse('product-detail', kwargs={'pk': obj.pk}, request=request)
 
-    def get_owner_username(self, obj):
-
-        if obj.owner:
-            return obj.owner.username
-        return None
 
     def get_sale_price(self, obj):
         print(obj.price)
@@ -57,8 +54,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
-    owner_username = serializers.SerializerMethodField(read_only=True)
+
     sale_price = serializers.SerializerMethodField(read_only=True)
+    category = serializers.StringRelatedField(read_only=True)
+    owner = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Product
@@ -69,7 +68,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                 'sale_price',
                 'category',
                 'owner',
-                'owner_username',
+
             ]
 
     def get_owner_username(self, obj):
