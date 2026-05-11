@@ -5,5 +5,5 @@ from . views import ProductRetrieveUpdateDestroyAPIView, ProductListCreateAPIVie
 
 urlpatterns = [
     path('', ProductListCreateAPIView.as_view()),
-    path('<int:pk>', ProductRetrieveUpdateDestroyAPIView.as_view()),
+    path('<int:pk>/', ProductRetrieveUpdateDestroyAPIView.as_view()),
 ]
