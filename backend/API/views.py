@@ -1,9 +1,7 @@
-from django.shortcuts import render
 from rest_framework import generics
-from rest_framework import permissions
+
 
 from . permissions import  IsStaffEditorPermission, IsOwnerOrReadOnly
-
 from .models import Category, Product
 from . serializers import CategorySerializer, ProductSerializer, ProductDetailSerializer
 
@@ -24,8 +22,8 @@ class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
     serializer_class = ProductDetailSerializer
     lookup_field = 'pk'
     permission_classes = [
-                          IsStaffEditorPermission |
-                          IsOwnerOrReadOnly,
+                            IsStaffEditorPermission |
+                            IsOwnerOrReadOnly,
                           ]
 
 

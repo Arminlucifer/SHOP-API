@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-
+from rest_framework import serializers
 
 from .models import Category, Product
+
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -13,8 +14,6 @@ class CategorySerializer(serializers.ModelSerializer):
             'name',
         ]
 
-from rest_framework import serializers
-from .models import Category, Product
 
 class ProductSerializer(serializers.ModelSerializer):
 
@@ -49,7 +48,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
     def get_sale_price(self, obj):
-        print(obj.price)
+
         return "%.2f" % (float(obj.price) * 1.09)
 
 
