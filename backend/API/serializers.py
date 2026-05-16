@@ -3,8 +3,9 @@ from rest_framework.reverse import reverse
 from rest_framework import serializers
 
 
+
 from .models import Category, Product
-from . validators import validate_name, validate_price
+from .validators import  validate_price, unique_product_title
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -27,7 +28,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     owner = serializers.StringRelatedField(read_only=True)
     email = serializers.EmailField(write_only=True)
-    name = serializers.CharField(validators =[validate_name])
+    name = serializers.CharField(validators =[unique_product_title])
     price = serializers.DecimalField(max_digits=10,
                                      decimal_places=2,
                                      validators=[validate_price])
@@ -85,7 +86,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField(read_only=True)
     owner = serializers.StringRelatedField(read_only=True)
     email = serializers.EmailField(write_only=True)
-    name = serializers.CharField(validators =[validate_name])
+    name = serializers.CharField(validators =[unique_product_title])
     price = serializers.DecimalField(max_digits=10,
                                      decimal_places=2,
                                      validators=[validate_price])
