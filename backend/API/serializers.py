@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
+
 
 from .models import Category, Product
-
+from . validators import validate_name, validate_price
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -27,7 +27,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     owner = serializers.StringRelatedField(read_only=True)
     email = serializers.EmailField(write_only=True)
-
+    name = serializers.CharField(validators =[validate_name])
+    price = serializers.DecimalField(max_digits=10,
+                                     decimal_places=2,
+                                     validators=[validate_price])
     class Meta:
         model = Product
         fields = [
@@ -42,17 +45,17 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
         ]
-    def validate_name(self, name):
-        if name == '':
-            raise serializers.ValidationError('Name cannot be empty')
-        qs = Product.objects.filter(name__iexact=name)
-        if qs.exists():
-            raise serializers.ValidationError('Product with this name already exists')
-        return name
-    def validate_price(self, price):
-        if price <= 0 :
-            raise serializers.ValidationError('Price must be greater than 0')
-        return price
+    # def validate_name(self, name):
+    #     if name == '':
+    #         raise serializers.ValidationError('Name cannot be empty')
+    #     qs = Product.objects.filter(name__iexact=name)
+    #     if qs.exists():
+    #         raise serializers.ValidationError('Product with this name already exists')
+    #     return name
+    # def validate_price(self, price):
+    #     if price <= 0 :
+    #         raise serializers.ValidationError('Price must be greater than 0')
+    #     return price
     def create(self, validated_data):
         email = validated_data.pop('email', None)
         print(email)
@@ -82,6 +85,10 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField(read_only=True)
     owner = serializers.StringRelatedField(read_only=True)
     email = serializers.EmailField(write_only=True)
+    name = serializers.CharField(validators =[validate_name])
+    price = serializers.DecimalField(max_digits=10,
+                                     decimal_places=2,
+                                     validators=[validate_price])
 
     class Meta:
         model = Product
