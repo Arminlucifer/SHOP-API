@@ -17,6 +17,9 @@ class ProductListCreateAPIView(
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    allow_staff_view = False
+
+
     # permission has been set in settings
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -32,9 +35,12 @@ class ProductListCreateAPIView(
 class ProductRetrieveUpdateDestroyAPIView(
     UserQuerySetMixin,
     generics.RetrieveUpdateDestroyAPIView):
+
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
+    allow_staff_view = False
     lookup_field = 'pk'
+
     permission_classes = [
                             IsStaffEditorPermission |
                             IsOwnerOrReadOnly,
