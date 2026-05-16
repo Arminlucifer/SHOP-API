@@ -16,6 +16,9 @@ class ProductListCreateAPIView(
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     # permission has been set in settings
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()

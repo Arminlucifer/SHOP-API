@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from .models import Category, Product
 
@@ -23,23 +24,40 @@ class ProductSerializer(serializers.ModelSerializer):
     )
 
     sale_price = serializers.SerializerMethodField(read_only=True)
-    category = serializers.StringRelatedField(read_only=True)
+
     owner = serializers.StringRelatedField(read_only=True)
+    email = serializers.EmailField(write_only=True)
 
     class Meta:
         model = Product
         fields = [
             'id',
             'name',
+            'email',
             'product_link',
             'price',
             'sale_price',
             'category',
             'owner',
 
+
         ]
+    def create(self, validated_data):
+        email = validated_data.pop('email', None)
+        print(email)
+        instance = Product.objects.create(**validated_data)
+        return instance
+
+    def update(self, instance, validated_data):
+        email =validated_data.pop('email', None)
+        if email:
+            print(f'sending email to {email}')
+
+        return super().update(instance, validated_data)
 
 
+
+    #second method to get product link
     def get_product_link(self, obj):
         request = self.context.get('request')
         if request is None:
