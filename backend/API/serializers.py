@@ -45,15 +45,10 @@ class ProductSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         email = validated_data.pop('email', None)
         print(email)
-        instance = Product.objects.create(**validated_data)
+        instance = super().create(validated_data)
         return instance
 
-    def update(self, instance, validated_data):
-        email =validated_data.pop('email', None)
-        if email:
-            print(f'sending email to {email}')
 
-        return super().update(instance, validated_data)
 
 
 
@@ -75,18 +70,27 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     sale_price = serializers.SerializerMethodField(read_only=True)
     category = serializers.StringRelatedField(read_only=True)
     owner = serializers.StringRelatedField(read_only=True)
+    email = serializers.EmailField(write_only=True)
 
     class Meta:
         model = Product
         fields = [
                  'id',
                 'name',
+                'email',
                 'price',
                 'sale_price',
                 'category',
                 'owner',
 
             ]
+
+    def update(self, instance, validated_data):
+        email = validated_data.pop('email', None)
+        if email:
+            print(f'sending email to {email}')
+
+        return super().update(instance, validated_data)
 
     def get_owner_username(self, obj):
 
