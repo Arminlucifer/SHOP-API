@@ -3,10 +3,11 @@ from rest_framework import serializers
 from . models import Product
 
 def validate_name(name):
-    if name == '':
+
+    if name is None:
         raise serializers.ValidationError('Name cannot be empty')
     qs = Product.objects.filter(name__iexact=name)
-    if qs.exists():
+    if qs.exists() :
         raise serializers.ValidationError('Product with this name already exists')
     return name
 def validate_price(price):
