@@ -42,6 +42,17 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
         ]
+    def validate_name(self, name):
+        if name == '':
+            raise serializers.ValidationError('Name cannot be empty')
+        qs = Product.objects.filter(name__iexact=name)
+        if qs.exists():
+            raise serializers.ValidationError('Product with this name already exists')
+        return name
+    def validate_price(self, price):
+        if price <= 0 :
+            raise serializers.ValidationError('Price must be greater than 0')
+        return price
     def create(self, validated_data):
         email = validated_data.pop('email', None)
         print(email)
@@ -84,6 +95,19 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                 'owner',
 
             ]
+
+    def validate_price(self, price):
+        if price <= 0:
+            raise serializers.ValidationError('Price must be greater than 0')
+        return price
+
+    def validate_name(self, name):
+        if name == '':
+            raise serializers.ValidationError('Name cannot be empty')
+        qs = Product.objects.filter(name__iexact=name)
+        if qs.exists():
+            raise serializers.ValidationError('Product with this name already exists')
+        return name
 
     def update(self, instance, validated_data):
         email = validated_data.pop('email', None)
